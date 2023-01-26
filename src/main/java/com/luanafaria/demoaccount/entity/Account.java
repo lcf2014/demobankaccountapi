@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Table(name = "accounts")
 @Entity
@@ -19,7 +20,12 @@ public class Account {
     @Column(nullable = false)
     private Integer documentNumber;
 
+    @Column(nullable = false)
+    private BigDecimal availableCreditLimit;
+
+
     public Account(Integer documentNumber) {
         this.documentNumber = documentNumber;
     }
+
 }

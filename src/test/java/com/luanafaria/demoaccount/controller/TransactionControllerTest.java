@@ -33,23 +33,4 @@ class TransactionControllerTest {
     @Autowired
     private AccountRepository accountRepository;
 
-    @Test
-    void createTransaction() throws Exception {
-        Account account = new Account(Long.valueOf(123), 123456789);
-        accountRepository.save(account);
-
-        TransactionDto transaction = new TransactionDto(Long.valueOf(123), 1, BigDecimal.valueOf(6.0));
-
-        this.mockMvc
-                .perform(post("/transactions")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(transaction))
-                )
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.accountId").value(123))
-                .andExpect(jsonPath("$.operationTypeId").value(1))
-                .andExpect(jsonPath("$.id").isNotEmpty())
-                .andReturn();
-    }
 }

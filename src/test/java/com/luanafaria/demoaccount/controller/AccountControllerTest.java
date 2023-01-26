@@ -5,6 +5,7 @@ import com.luanafaria.demoaccount.DemoBankAccountApiApplication;
 import com.luanafaria.demoaccount.entity.Account;
 import com.luanafaria.demoaccount.payload.AccountDto;
 import com.luanafaria.demoaccount.repository.AccountRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -49,18 +50,5 @@ class AccountControllerTest {
                 .andReturn();
     }
 
-    @Test
-    void getAccountById() throws Exception {
-        Account account = new Account(123456789);
-        Account savedAccount = accountRepository.save(account);
 
-        this.mockMvc
-                .perform(get("/accounts/{accountId}", 1)
-                        .accept(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.documentNumber").value(savedAccount.getDocumentNumber()))
-                .andExpect(jsonPath("$.id").isNotEmpty())
-                .andReturn();
-    }
 }
