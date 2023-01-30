@@ -43,7 +43,7 @@ public class TransactionService {
             BigDecimal availableCreditLimit = account.get().getAvailableCreditLimit();
             BigDecimal updatedavailableCreditLimit = availableCreditLimit.add(transactionDto.getAmount());
             if(updatedavailableCreditLimit.compareTo(BigDecimal.ZERO) == -1){
-                throw new BadRequestException("transactionDTO", "transactionDTO", transactionDto.toString());
+                throw new BadRequestException("AvailableLimitCredit",availableCreditLimit.toString());
             }
 
             account.get().setAvailableCreditLimit(availableCreditLimit.add(transactionDto.getAmount()));
