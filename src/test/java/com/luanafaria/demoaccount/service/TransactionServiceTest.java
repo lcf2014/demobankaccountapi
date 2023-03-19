@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static com.luanafaria.demoaccount.enums.OperationTypeId.WITHDRAW;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -37,9 +38,9 @@ class TransactionServiceTest {
 
     @Test
     void createTransaction() {
-        Transaction transaction = new Transaction(123456L, 123456L, 3,
+        Transaction transaction = new Transaction(123456L, 123456L, WITHDRAW,
                 BigDecimal.valueOf(-0.5), LocalDateTime.now());
-        TransactionDto transactionDto = new TransactionDto(123456L, 3, BigDecimal.valueOf(0.5));
+        TransactionDto transactionDto = new TransactionDto(123456L, WITHDRAW, BigDecimal.valueOf(0.5));
         when(accountRepository.findById(any())).thenReturn(Optional.of(
                 new Account(123456L, 123456789, BigDecimal.valueOf(5000))));
 
@@ -52,9 +53,9 @@ class TransactionServiceTest {
 
     @Test
     void createTransactionShouldThrowBadRequestException() {
-        Transaction transaction = new Transaction(123456L, 123456L, 3,
+        Transaction transaction = new Transaction(123456L, 123456L, WITHDRAW,
                 BigDecimal.valueOf(-0.5), LocalDateTime.now());
-        TransactionDto transactionDto = new TransactionDto(123456L, 3, BigDecimal.valueOf(5500));
+        TransactionDto transactionDto = new TransactionDto(123456L, WITHDRAW, BigDecimal.valueOf(5500));
         when(accountRepository.findById(any())).thenReturn(Optional.of(
                 new Account(123456L, 123456789, BigDecimal.valueOf(5000))));
 

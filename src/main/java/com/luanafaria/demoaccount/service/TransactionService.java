@@ -3,6 +3,7 @@ package com.luanafaria.demoaccount.service;
 
 import com.luanafaria.demoaccount.entity.Account;
 import com.luanafaria.demoaccount.entity.Transaction;
+import com.luanafaria.demoaccount.enums.OperationTypeId;
 import com.luanafaria.demoaccount.exception.BadRequestException;
 import com.luanafaria.demoaccount.exception.ResourceNotFoundException;
 import com.luanafaria.demoaccount.payload.TransactionDto;
@@ -29,9 +30,9 @@ public class TransactionService {
 
     @Transactional
     public Transaction createTransaction(TransactionDto transactionDto) {
-        Integer operationTypeId = transactionDto.getOperationTypeId();
+        OperationTypeId operationTypeId = transactionDto.getOperationTypeId();
 
-        if (operationTypeId <= 3) {
+        if (operationTypeId.getValue() <= OperationTypeId.WITHDRAW.getValue()) {
             transactionDto.setAmount(transactionDto.getAmount().abs().negate());
         } else {
             transactionDto.setAmount(transactionDto.getAmount().abs());
@@ -39,11 +40,20 @@ public class TransactionService {
 
         Optional<Account> account = accountRepository.findById(transactionDto.getAccountId());
 
+        updateAvailableCreditLimit(account, transactionDto);
+
+        Transaction transaction = modelMapper.map(transactionDto, Transaction.class);
+        transaction.setEventDate(LocalDateTime.now());
+
+        return transactionRepository.save(transaction);
+    }
+
+    void updateAvailableCreditLimit(final Optional<Account> account, TransactionDto transactionDto){
         if (account.isPresent()) {
             BigDecimal availableCreditLimit = account.get().getAvailableCreditLimit();
             BigDecimal updatedavailableCreditLimit = availableCreditLimit.add(transactionDto.getAmount());
-            if(updatedavailableCreditLimit.compareTo(BigDecimal.ZERO) == -1){
-                throw new BadRequestException("AvailableLimitCredit",availableCreditLimit.toString());
+            if (updatedavailableCreditLimit.compareTo(BigDecimal.ZERO) == -1) {
+                throw new BadRequestException("AvailableLimitCredit", availableCreditLimit.toString());
             }
 
             account.get().setAvailableCreditLimit(availableCreditLimit.add(transactionDto.getAmount()));
@@ -52,10 +62,5 @@ public class TransactionService {
         } else {
             throw new ResourceNotFoundException("Account", "AccountId", transactionDto.getAccountId());
         }
-
-        Transaction transaction = modelMapper.map(transactionDto, Transaction.class);
-        transaction.setEventDate(LocalDateTime.now());
-
-        return transactionRepository.save(transaction);
     }
 }

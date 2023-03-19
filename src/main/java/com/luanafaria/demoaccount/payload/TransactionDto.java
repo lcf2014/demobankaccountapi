@@ -1,5 +1,6 @@
 package com.luanafaria.demoaccount.payload;
 
+import com.luanafaria.demoaccount.enums.OperationTypeId;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class TransactionDto {
     private Long accountId;
 
     @NonNull
-    private Integer operationTypeId;
+    private OperationTypeId operationTypeId;
 
     @NonNull
     private BigDecimal amount;

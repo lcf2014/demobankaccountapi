@@ -1,5 +1,6 @@
 package com.luanafaria.demoaccount.entity;
 
+import com.luanafaria.demoaccount.enums.OperationTypeId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ public class Transaction {
     private Long accountId;
 
     @Column(nullable = false)
-    private Integer operationTypeId;
+    private OperationTypeId operationTypeId;
 
     @Column(nullable = false)
     private BigDecimal amount;
